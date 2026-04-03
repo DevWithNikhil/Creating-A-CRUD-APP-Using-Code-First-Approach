@@ -1,6 +1,7 @@
 using CFApproachEFCore.Data;
 using CFApproachEFCore.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace CFApproachEFCore.Controllers
@@ -13,9 +14,9 @@ namespace CFApproachEFCore.Controllers
         {
             this.studentDb = studentDb;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var stdData = studentDb.Students.ToList();
+            var stdData = await studentDb.Students.ToListAsync();
             return View(stdData);
         }
 
@@ -34,6 +35,20 @@ namespace CFApproachEFCore.Controllers
                 return RedirectToAction("Index", "Home");
             }
             return View(std);
+        }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null || studentDb.Students == null)
+            {
+                return NotFound();
+            }
+            var stdData = await studentDb.Students.FirstOrDefaultAsync(x => x.Id == id);
+            if (stdData == null)
+            {
+                return NotFound();
+            }
+            return View(stdData);
         }
 
         public IActionResult Privacy()
