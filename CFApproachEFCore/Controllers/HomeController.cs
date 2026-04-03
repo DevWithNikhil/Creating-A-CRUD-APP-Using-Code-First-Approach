@@ -19,6 +19,23 @@ namespace CFApproachEFCore.Controllers
             return View(stdData);
         }
 
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Student std)
+        {
+            if (ModelState.IsValid)
+            {
+                await studentDb.Students.AddAsync(std);
+                await studentDb.SaveChangesAsync();
+                return RedirectToAction("Index", "Home");
+            }
+            return View(std);
+        }
+
         public IActionResult Privacy()
         {
             return View();
