@@ -26,12 +26,14 @@ namespace CFApproachEFCore.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Student std)
         {
             if (ModelState.IsValid)
             {
                 await studentDb.Students.AddAsync(std);
                 await studentDb.SaveChangesAsync();
+                TempData["Create_STD"] = "Inserted Student Info!";
                 return RedirectToAction("Index", "Home");
             }
             return View(std);
@@ -67,6 +69,7 @@ namespace CFApproachEFCore.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int? id, Student std)
         {
             if (id != std.Id)
@@ -77,6 +80,7 @@ namespace CFApproachEFCore.Controllers
             {
                 studentDb.Students.Update(std);
                 await studentDb.SaveChangesAsync();
+                TempData["Update_STD"] = "Updated Student Info!";
                 return RedirectToAction("Index", "Home");
             }
             return View(std);
@@ -98,6 +102,7 @@ namespace CFApproachEFCore.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? id)
         {
             var stdData = await studentDb.Students.FindAsync(id);
@@ -106,6 +111,7 @@ namespace CFApproachEFCore.Controllers
                 studentDb.Students.Remove(stdData);
             }
             await studentDb.SaveChangesAsync();
+            TempData["Delete_STD"] = "Deleted Student Info!";
             return RedirectToAction("Index", "Home");
         }
 
